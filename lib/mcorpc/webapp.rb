@@ -88,14 +88,14 @@ class MCORPC
     get '/data/:data_plugin' do
       @agent = "rpcutil"
       @data_plugin = params[:data_plugin]
-      @ddl = MCollective::DDL.new(@data_plugin, :data)
+      @ddl = MCollective::RPC::DDL.new(@data_plugin, :data)
       erb :"data/data_overview"
     end
 
     get '/data/:data_plugin/query' do
       @agent = "rpcutil"
       @data_plugin = params[:data_plugin]
-      @ddl = MCollective::DDL.new(@data_plugin, :data)
+      @ddl = MCollective::RPC::DDL.new(@data_plugin, :data)
 
       @client = MCWrapper.new(@agent)
       @client.agent.timeout = @client.agent.discovery_timeout + @ddl.meta[:timeout]
@@ -120,7 +120,7 @@ class MCORPC
 
     get '/agent/:agent' do
       @agent = params[:agent]
-      @ddl = MCollective::DDL.new(@agent)
+      @ddl = MCollective::RPC::DDL.new(@agent)
       @actions = @ddl.actions
       erb :"agent/agent_overview"
     end
@@ -133,11 +133,7 @@ class MCORPC
 
       content_type :json
 
-      if params["groupsize"]
-        @client.discover.sort.in_groups_of(Integer(params["groupsize"])).to_json
-      else
-        @client.discover.sort.to_json
-      end
+      Array(@client.discover).sort.to_json
     end
 
     get '/agent/:agent/run/:action' do
@@ -171,7 +167,7 @@ class MCORPC
       @agent = params[:agent]
       @action = params[:action]
 
-      @ddl = MCollective::DDL.new(@agent)
+      @ddl = MCollective::RPC::DDL.new(@agent)
       @actions = @ddl.actions
       @action_interface = @ddl.action_interface(@action)
       @client = MCWrapper.new(@agent)

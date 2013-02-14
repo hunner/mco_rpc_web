@@ -6,7 +6,6 @@ class MCORPC
 
     def initialize(agent)
       @agent = rpcclient(agent)
-      @agent.discovery_method = "mongo"
       @agent.progress = false
     end
 
@@ -63,17 +62,29 @@ class MCORPC
     end
 
     def self.data_plugins
-      MCollective::PluginManager.find(:data, "ddl").map do |data|
-        ddl = MCollective::DDL.new(data, :data)
+      plugins(:data, ".ddl").map do |data|
+        ddl = MCollective::RPC::DDL.new(data, :data)
         [ data, ddl.meta[:description] ]
       end
     end
 
     def self.agents
-      MCollective::PluginManager.find(:agent, "ddl").map do |agent|
-        ddl = MCollective::DDL.new(agent)
+      plugins(:agent, ".ddl").map do |agent|
+        ddl = MCollective::RPC::DDL.new(agent)
         [ agent, ddl.meta[:description] ]
       end
+    end
+
+    def self.plugins(type, extension)
+      plugins = []
+      MCollective::Config.instance.libdir.each do |libdir|
+        plugdir = File.join([libdir, "mcollective", type.to_s])
+        next unless File.directory?(plugdir)
+        Dir.new(plugdir).grep(/#{extension}/).map do |plugin|
+          plugins << File.basename(plugin, extension)
+        end
+      end
+      plugins.sort.uniq
     end
   end
 end
