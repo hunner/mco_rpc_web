@@ -136,7 +136,7 @@ class MCORPC
       Array(@client.discover).sort.to_json
     end
 
-    get '/agent/:agent/run/:action' do
+    get '/agent/:agent/run/:action', :provides => [:html,:json] do
       @agent = params[:agent]
       @action = params[:action]
 
@@ -160,7 +160,15 @@ class MCORPC
 
       @arguments ||= {}
 
-      erb :"agent/generic_result_view"
+      request.accept.each do |type|
+        case type
+        when /html$/
+          halt erb :"agent/generic_result_view"
+        when /json$/
+          results = @results.collect { |x| x.results }
+          halt results.to_json
+        end
+      end
     end
 
     get '/agent/:agent/action/:action' do
