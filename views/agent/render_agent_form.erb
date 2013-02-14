@@ -6,7 +6,7 @@
 
 <br />
 
-<form class="form-horizontal" id="rpc_form" action="/agent/<%= @agent %>/run/<%= @action %>" onSubmit="$('#waitingModal').modal()">
+<form class="form-horizontal" id="rpc_form" action="/mcollective/agent/<%= @agent %>/run/<%= @action %>" onSubmit="$('#waitingModal').modal()">
   <ul class="nav nav-tabs">
     <li class="active"><a href="#required" data-toggle="tab">Required Inputs</a></li>
     <% if @optional_inputs.size > 0 %>

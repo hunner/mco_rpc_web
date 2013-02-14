@@ -2,7 +2,7 @@
 
 <br />
 
-<form class="form-horizontal" id="rpc_form" action="/data/<%= @data_plugin %>/query" onSubmit="$('#waitingModal').modal()">
+<form class="form-horizontal" id="rpc_form" action="/mcollective/data/<%= @data_plugin %>/query" onSubmit="$('#waitingModal').modal()">
   <ul class="nav nav-tabs">
     <li class="active"><a href="#input" data-toggle="tab">Input</a></li>
     <li><a href="#discovery" data-toggle="tab">Discovery Filters</a></li>
@@ -72,7 +72,7 @@
       var filter = $('#combined_filter_value').val()
     }
 
-    var url = "/agent/rpcutil/discover/combined/" + encodeURIComponent(filter) + "?groupsize=6"
+    var url = "/mcollective/agent/rpcutil/discover/combined/" + encodeURIComponent(filter) + "?groupsize=6"
 
     $.getJSON(url, function(data) {
       $("#discovered-nodes tr").remove();

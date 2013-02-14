@@ -14,7 +14,7 @@
   </thead>
   <tbody>
     <% @ddl.actions.sort.each do |action| %>
-      <tr><td><a href="/agent/<%= @agent %>/action/<%= action %>"><%= action %></a></td><td><%= @ddl.action_interface(action)[:description] %></td></tr>
+      <tr><td><a href="/mcollective/agent/<%= @agent %>/action/<%= action %>"><%= action %></a></td><td><%= @ddl.action_interface(action)[:description] %></td></tr>
     <% end %>
   </tbody>
 </table>
