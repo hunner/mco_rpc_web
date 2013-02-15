@@ -136,6 +136,17 @@ class MCORPC
       Array(@client.discover).sort.to_json
     end
 
+    get '/agent/:agent/discover/identity/:identity' do
+      @agent = params[:agent]
+      @client = MCWrapper.new(@agent)
+
+      @client.agent.identity_filter(params["identity"])
+
+      content_type :json
+
+      Array(@client.discover).sort.to_json
+    end
+
     get '/agent/:agent/run/:action', :provides => [:html,:json] do
       @agent = params[:agent]
       @action = params[:action]
@@ -147,7 +158,7 @@ class MCORPC
 
       begin
         if params["filter"]["identity"]
-          @client.agent.discover :nodes => params["filter"]["identity"]
+          @client.agent.identity_filter(params["filter"]["identity"])
         elsif params["filter"]["combined"]
           @client.apply_combined_filter(params["filter"]["combined"])
         end
