@@ -5,7 +5,7 @@ class MCORPC
     attr_reader :agent
 
     def initialize(agent)
-      @agent = rpcclient(agent)
+      @agent = rpcclient(agent,{:configfile => '/opt/puppet/share/puppet-dashboard/.mcollective'})
       @agent.progress = false
     end
 
